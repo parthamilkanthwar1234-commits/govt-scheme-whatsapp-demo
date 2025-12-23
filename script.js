@@ -10,10 +10,43 @@ function addUser(msg) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-function lang(language) {
-  addUser(language);
-  addBot(`✅ Language selected: <b>${language}</b><br><br>
-  Please select a category:
+/* ----------- INPUT HANDLING ----------- */
+function handleKey(e) {
+  if (e.key === "Enter") sendText();
+}
+
+function sendText() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (text === "") return;
+
+  addUser(text);
+  input.value = "";
+
+  processText(text.toLowerCase());
+}
+
+/* ----------- BOT LOGIC ----------- */
+function processText(msg) {
+  if (msg === "menu") {
+    showMenu();
+  } else if (msg === "back") {
+    showCategories();
+  } else {
+    addBot("❓ Please type <b>Menu</b> or <b>Back</b>");
+  }
+}
+
+/* ----------- MENUS ----------- */
+function showMenu() {
+  addBot(`📋 Main Menu:
+  <div class="btn-group">
+    <button onclick="showCategories()">📂 Categories</button>
+  </div>`);
+}
+
+function showCategories() {
+  addBot(`Please select a category:
   <div class="btn-group">
     <button onclick="category('Education')">🎓 Education</button>
     <button onclick="category('Agriculture')">🌾 Agriculture</button>
@@ -23,60 +56,42 @@ function lang(language) {
   </div>`);
 }
 
+/* ----------- CATEGORY ----------- */
 function category(cat) {
   addUser(cat);
 
   if (cat === "Education") {
-    addBot(`🎓 Education Schemes:
-    <div class="btn-group">
-      <button onclick="scheme('Scholarship Scheme')">Scholarship Scheme</button>
-      <button onclick="scheme('Free Laptop Scheme')">Free Laptop Scheme</button>
-      <button onclick="scheme('Skill Development Program')">Skill Development Program</button>
-    </div>`);
-  }
-
-  if (cat === "Agriculture") {
-    addBot(`🌾 Agriculture Schemes:
-    <div class="btn-group">
-      <button onclick="scheme('PM Kisan Yojana')">PM Kisan Yojana</button>
-      <button onclick="scheme('Crop Insurance Scheme')">Crop Insurance Scheme</button>
-      <button onclick="scheme('Soil Health Card')">Soil Health Card</button>
-    </div>`);
-  }
-
-  if (cat === "Women") {
-    addBot(`👩 Women Schemes:
-    <div class="btn-group">
-      <button onclick="scheme('Ujjwala Yojana')">Ujjwala Yojana</button>
-      <button onclick="scheme('Beti Bachao Beti Padhao')">Beti Bachao Beti Padhao</button>
-      <button onclick="scheme('Mahila Shakti Kendra')">Mahila Shakti Kendra</button>
-    </div>`);
-  }
-
-  if (cat === "Senior") {
-    addBot(`👴 Senior Citizen Schemes:
-    <div class="btn-group">
-      <button onclick="scheme('Atal Pension Yojana')">Atal Pension Yojana</button>
-      <button onclick="scheme('Senior Health Insurance')">Senior Health Insurance</button>
-    </div>`);
-  }
-
-  if (cat === "Employment") {
-    addBot(`💼 Employment Schemes:
-    <div class="btn-group">
-      <button onclick="scheme('PM Mudra Loan')">PM Mudra Loan</button>
-      <button onclick="scheme('Rozgar Yojana')">Rozgar Yojana</button>
-    </div>`);
+    schemeList(["Scholarship Scheme", "Free Laptop Scheme", "Skill Development"]);
+  } else if (cat === "Agriculture") {
+    schemeList(["PM Kisan Yojana", "Crop Insurance", "Soil Health Card"]);
+  } else if (cat === "Women") {
+    schemeList(["Ujjwala Yojana", "Beti Bachao Beti Padhao"]);
+  } else if (cat === "Senior") {
+    schemeList(["Atal Pension Yojana"]);
+  } else if (cat === "Employment") {
+    schemeList(["PM Mudra Loan"]);
   }
 }
 
+function schemeList(list) {
+  let html = `<div class="btn-group">`;
+  list.forEach(s => {
+    html += `<button onclick="scheme('${s}')">${s}</button>`;
+  });
+  html += `</div>`;
+  addBot(html);
+}
+
+/* ----------- SCHEME ----------- */
 function scheme(name) {
   addUser(name);
-
   addBot(`📌 <b>${name}</b><br>
-  ✅ Eligibility: As per government norms<br>
+  ✅ Eligibility: As per govt norms<br>
   ✅ Benefits: Financial / Social support<br>
-  ✅ Documents: Aadhaar, Relevant Certificates<br><br>
-  Type <b>Menu</b> to go back<br>
-  Type <b>Exit</b> to end chat`);
+  ✅ Documents: Aadhaar, Certificates<br><br>
+  <button class="action-btn" onclick="showCategories()">⬅ Back</button>
+  <button class="action-btn" onclick="showMenu()">🏠 Menu</button>`);
 }
+
+/* ----------- START ----------- */
+showCategories();
