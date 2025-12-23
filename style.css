@@ -1,43 +1,40 @@
 body {
-  background: #cfcfcf;
+  margin: 0;
   font-family: Arial, sans-serif;
+  background: #ece5dd;
 }
 
 .phone {
-  width: 360px;
-  height: 640px;
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  margin: auto;
   background: #ece5dd;
-  margin: 20px auto;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 0 10px #555;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
   background: #075e54;
   color: white;
   padding: 12px;
-  font-weight: bold;
   text-align: center;
+  font-weight: bold;
 }
 
 .chat {
+  flex: 1;
   padding: 10px;
-  height: 520px;
   overflow-y: auto;
 }
 
 .msg {
-  background: white;
+  background: #fff;
   padding: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   border-radius: 8px;
   max-width: 85%;
   font-size: 14px;
-}
-
-.bot {
-  background: #ffffff;
 }
 
 .user {
@@ -45,24 +42,38 @@ body {
   margin-left: auto;
 }
 
-.btn-group button {
+.btn-group button,
+.action-btn {
   display: block;
   width: 100%;
   margin: 5px 0;
   padding: 8px;
-  border: none;
-  border-radius: 5px;
   background: #128c7e;
   color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
 }
 
-.btn-group button:hover {
-  background: #0d6b5f;
+.input-box {
+  display: flex;
+  padding: 8px;
+  background: #fff;
 }
 
-.input-box {
-  padding: 10px;
-  background: white;
+.input-box input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.input-box button {
+  margin-left: 6px;
+  padding: 8px 12px;
+  border-radius: 50%;
+  border: none;
+  background: #075e54;
+  color: white;
 }
