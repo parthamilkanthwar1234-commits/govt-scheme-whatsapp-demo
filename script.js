@@ -10,7 +10,6 @@ function addUser(msg) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* ----------- INPUT HANDLING ----------- */
 function handleKey(e) {
   if (e.key === "Enter") sendText();
 }
@@ -18,80 +17,81 @@ function handleKey(e) {
 function sendText() {
   const input = document.getElementById("userInput");
   const text = input.value.trim();
-  if (text === "") return;
-
+  if (!text) return;
   addUser(text);
   input.value = "";
-
-  processText(text.toLowerCase());
-}
-
-/* ----------- BOT LOGIC ----------- */
-function processText(msg) {
-  if (msg === "menu") {
-    showMenu();
-  } else if (msg === "back") {
-    showCategories();
-  } else {
-    addBot("❓ Please type <b>Menu</b> or <b>Back</b>");
-  }
-}
-
-/* ----------- MENUS ----------- */
-function showMenu() {
-  addBot(`📋 Main Menu:
-  <div class="btn-group">
-    <button onclick="showCategories()">📂 Categories</button>
-  </div>`);
+  if (text.toLowerCase() === "menu") showCategories();
+  else addBot("❓ Please type <b>Menu</b> or use buttons below.");
 }
 
 function showCategories() {
-  addBot(`Please select a category:
+  addBot(`📂 Select Category:
   <div class="btn-group">
     <button onclick="category('Education')">🎓 Education</button>
     <button onclick="category('Agriculture')">🌾 Agriculture</button>
+    <button onclick="category('Housing')">🏠 Housing</button>
+    <button onclick="category('Health')">🏥 Health</button>
     <button onclick="category('Women')">👩 Women</button>
-    <button onclick="category('Senior')">👴 Senior Citizens</button>
     <button onclick="category('Employment')">💼 Employment</button>
   </div>`);
 }
 
-/* ----------- CATEGORY ----------- */
 function category(cat) {
   addUser(cat);
 
-  if (cat === "Education") {
-    schemeList(["Scholarship Scheme", "Free Laptop Scheme", "Skill Development"]);
-  } else if (cat === "Agriculture") {
-    schemeList(["PM Kisan Yojana", "Crop Insurance", "Soil Health Card"]);
-  } else if (cat === "Women") {
-    schemeList(["Ujjwala Yojana", "Beti Bachao Beti Padhao"]);
-  } else if (cat === "Senior") {
-    schemeList(["Atal Pension Yojana"]);
-  } else if (cat === "Employment") {
-    schemeList(["PM Mudra Loan"]);
-  }
-}
+  const schemes = {
+    Education: [
+      ["National Scholarship Portal", 
+      "Central portal for multiple scholarships for students.",
+      "https://scholarships.gov.in"]
+    ],
+    Agriculture: [
+      ["PM-KISAN", 
+      "Provides ₹6000 per year income support to eligible farmers.",
+      "https://pmkisan.gov.in"],
+      ["PM Fasal Bima Yojana", 
+      "Crop insurance scheme protecting farmers from crop loss.",
+      "https://pmfby.gov.in"]
+    ],
+    Housing: [
+      ["Pradhan Mantri Awas Yojana (PMAY)", 
+      "Affordable housing for urban and rural poor.",
+      "https://pmaymis.gov.in"]
+    ],
+    Health: [
+      ["Ayushman Bharat (PM-JAY)", 
+      "Health insurance cover up to ₹5 lakh per family per year.",
+      "https://pmjay.gov.in"]
+    ],
+    Women: [
+      ["Beti Bachao Beti Padhao", 
+      "Promotes education and welfare of the girl child.",
+      "https://wcd.gov.in/bbbp-scheme"],
+      ["Ujjwala Yojana", 
+      "Provides free LPG connections to women from poor households.",
+      "https://www.pmuy.gov.in"]
+    ],
+    Employment: [
+      ["PM Mudra Yojana", 
+      "Provides loans to small and micro businesses.",
+      "https://www.mudra.org.in"],
+      ["Skill India / PMKVY", 
+      "Skill training and certification for youth.",
+      "https://www.pmkvyofficial.org"]
+    ]
+  };
 
-function schemeList(list) {
-  let html = `<div class="btn-group">`;
-  list.forEach(s => {
-    html += `<button onclick="scheme('${s}')">${s}</button>`;
+  let html = "";
+  schemes[cat].forEach(s => {
+    html += `<div class="msg bot">
+      <b>${s[0]}</b><br>
+      ${s[1]}<br>
+      🔗 <a href="${s[2]}" target="_blank">${s[2]}</a><br><br>
+      <button class="action-btn" onclick="showCategories()">⬅ Back</button>
+    </div>`;
   });
-  html += `</div>`;
-  addBot(html);
+  chat.innerHTML += html;
+  chat.scrollTop = chat.scrollHeight;
 }
 
-/* ----------- SCHEME ----------- */
-function scheme(name) {
-  addUser(name);
-  addBot(`📌 <b>${name}</b><br>
-  ✅ Eligibility: As per govt norms<br>
-  ✅ Benefits: Financial / Social support<br>
-  ✅ Documents: Aadhaar, Certificates<br><br>
-  <button class="action-btn" onclick="showCategories()">⬅ Back</button>
-  <button class="action-btn" onclick="showMenu()">🏠 Menu</button>`);
-}
-
-/* ----------- START ----------- */
 showCategories();
