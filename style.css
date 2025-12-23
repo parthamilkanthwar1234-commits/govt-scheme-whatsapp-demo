@@ -1,0 +1,68 @@
+body {
+  background: #cfcfcf;
+  font-family: Arial, sans-serif;
+}
+
+.phone {
+  width: 360px;
+  height: 640px;
+  background: #ece5dd;
+  margin: 20px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 10px #555;
+}
+
+.header {
+  background: #075e54;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.chat {
+  padding: 10px;
+  height: 520px;
+  overflow-y: auto;
+}
+
+.msg {
+  background: white;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  max-width: 85%;
+  font-size: 14px;
+}
+
+.bot {
+  background: #ffffff;
+}
+
+.user {
+  background: #dcf8c6;
+  margin-left: auto;
+}
+
+.btn-group button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  background: #128c7e;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-group button:hover {
+  background: #0d6b5f;
+}
+
+.input-box {
+  padding: 10px;
+  background: white;
+}
