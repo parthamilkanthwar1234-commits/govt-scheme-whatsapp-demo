@@ -1,213 +1,239 @@
 const chat = document.getElementById("chat");
-let LANG = "en"; // en | hi | mr
+let LANG = "en";
 
-function addBot(msg) {
-  chat.innerHTML += `<div class="msg bot">${msg}</div>`;
+function addBot(m){
+  chat.innerHTML += `<div class="msg">${m}</div>`;
   chat.scrollTop = chat.scrollHeight;
 }
 
-function addUser(msg) {
-  chat.innerHTML += `<div class="msg user">${msg}</div>`;
+function addUser(m){
+  chat.innerHTML += `<div class="msg user">${m}</div>`;
   chat.scrollTop = chat.scrollHeight;
 }
 
-function handleKey(e) {
-  if (e.key === "Enter") sendText();
+function handleKey(e){
+  if(e.key === "Enter") sendText();
 }
 
-function sendText() {
-  const input = document.getElementById("userInput");
-  const text = input.value.trim();
-  if (!text) return;
-
-  addUser(text);
-  input.value = "";
-
-  if (text.toLowerCase() === "menu") showCategories();
-  else addBot(getText("typeMenu"));
+function sendText(){
+  let t = userInput.value.trim();
+  if(!t) return;
+  addUser(t);
+  userInput.value = "";
+  if(t.toLowerCase() === "menu") showCategories();
+  else addBot("Type <b>Menu</b>");
 }
 
-/* ---------------- LANGUAGE SELECTION ---------------- */
+/* ---------- Language Selection ---------- */
+addBot(`
+🌐 <b>Select Language / भाषा चुनें</b>
+<div class="btn-group">
+  <button onclick="setLang('en')">English</button>
+  <button onclick="setLang('hi')">हिंदी</button>
+  <button onclick="setLang('mr')">मराठी</button>
+</div>
+`);
 
-function selectLang(l) {
+function setLang(l){
   LANG = l;
-  addUser(l === "en" ? "English" : l === "hi" ? "Hindi" : "Marathi");
   showCategories();
 }
 
-function getText(key) {
-  const T = {
-    typeMenu: {
-      en: "❓ Please type <b>Menu</b> or use buttons.",
-      hi: "❓ कृपया <b>Menu</b> टाइप करें या बटन चुनें।",
-      mr: "❓ कृपया <b>Menu</b> टाइप करा किंवा बटण वापरा."
-    }
-  };
-  return T[key][LANG];
-}
-
-/* ---------------- START ---------------- */
-
-addBot(`
-🌐 Select Language:
-<div class="btn-group">
-  <button onclick="selectLang('en')">English</button>
-  <button onclick="selectLang('hi')">हिंदी</button>
-  <button onclick="selectLang('mr')">मराठी</button>
-</div>
-`);
-
-/* ---------------- CATEGORIES ---------------- */
-
-function showCategories() {
-  const C = {
-    en: "📂 Select Category:",
-    hi: "📂 श्रेणी चुनें:",
-    mr: "📂 योजना निवडा:"
-  };
-
+/* ---------- Categories ---------- */
+function showCategories(){
+  chat.innerHTML = "";
+  addBot("📂 <b>Categories</b>");
   addBot(`
-${C[LANG]}
 <div class="btn-group">
-  <button onclick="category('women')">👩 Women</button>
-  <button onclick="category('agri')">🌾 Agriculture</button>
-  <button onclick="category('edu')">🎓 Education</button>
-  <button onclick="category('health')">🏥 Health</button>
-  <button onclick="category('emp')">💼 Employment</button>
+  <button onclick="category('women')">Women</button>
+  <button onclick="category('agri')">Agriculture</button>
+  <button onclick="category('edu')">Education</button>
+  <button onclick="category('health')">Health</button>
+  <button onclick="category('emp')">Employment</button>
 </div>
 `);
 }
 
-/* ---------------- SCHEME LIST ---------------- */
+/* ---------- Category → Schemes ---------- */
+function category(cat){
+  chat.innerHTML = "";
+  addBot(`📌 <b>${cat.toUpperCase()} Schemes</b>`);
 
-function category(cat) {
-  addUser(cat);
-
-  if (cat === "women") {
-    addBot(`
-<div class="btn-group">
-  <button onclick="scheme('ladli')">Ladki Bahin Yojana</button>
-</div>
-`);
-  }
-
-  if (cat === "agri") {
-    addBot(`
-<div class="btn-group">
-  <button onclick="scheme('pmkisan')">PM-KISAN</button>
-</div>
-`);
-  }
-
-  if (cat === "health") {
-    addBot(`
-<div class="btn-group">
-  <button onclick="scheme('ayushman')">Ayushman Bharat</button>
-</div>
-`);
-  }
-
-  if (cat === "edu") {
-    addBot(`
-<div class="btn-group">
-  <button onclick="scheme('scholar')">National Scholarship Portal</button>
-</div>
-`);
-  }
-
-  if (cat === "emp") {
-    addBot(`
-<div class="btn-group">
-  <button onclick="scheme('mudra')">PM Mudra Yojana</button>
-</div>
-`);
-  }
-}
-
-/* ---------------- SCHEME DETAILS ---------------- */
-
-function scheme(id) {
-  addUser(id);
-
-  const data = {
-    ladli: {
-      mr: `
-<b>👩‍🦰 मुख्यमंत्री माझी लाडकी बहीण योजना</b><br><br>
-<b>✅ पात्रता निकष</b><br>
-• 21 ते 60 वयोगटातील महिला<br>
-• वार्षिक उत्पन्न ₹2.5 लाखांपेक्षा कमी<br>
-• महाराष्ट्र रहिवासी<br>
-• पिवळे/केशरी रेशन कार्ड<br><br>
-
-<b>📄 आवश्यक कागदपत्रे</b><br>
-• आधार कार्ड<br>
-• रेशन कार्ड<br>
-• बँक खाते<br>
-• उत्पन्न प्रमाणपत्र<br>
-• निवास प्रमाणपत्र<br><br>
-
-<b>💰 फायदे</b><br>
-• ₹1500 दरमहा थेट खात्यात<br><br>
-
-<b>🌐 वेबसाइट</b><br>
-<a href="https://ladlibahna.mahait.org" target="_blank">ladlibahna.mahait.org</a>
-`,
-      hi: `
-<b>👩‍🦰 मुख्यमंत्री माझी लाडकी बहन योजना</b><br><br>
-<b>✅ पात्रता</b><br>
-• 21–60 वर्ष की महिलाएं<br>
-• आय ₹2.5 लाख से कम<br>
-• महाराष्ट्र निवासी<br><br>
-
-<b>💰 लाभ</b><br>
-• ₹1500 प्रति माह<br><br>
-
-<b>🌐 वेबसाइट</b><br>
-<a href="https://ladlibahna.mahait.org" target="_blank">ladlibahna.mahait.org</a>
-`,
-      en: `
-<b>👩‍🦰 Ladki Bahin Yojana</b><br><br>
-<b>Eligibility</b><br>
-• Women aged 21–60<br>
-• Annual income below ₹2.5 lakh<br>
-• Maharashtra resident<br><br>
-
-<b>Benefits</b><br>
-• ₹1500 per month<br><br>
-
-<b>Website</b><br>
-<a href="https://ladlibahna.mahait.org" target="_blank">ladlibahna.mahait.org</a>
-`
-    },
-
-    pmkisan: {
-      en: `<b>PM-KISAN</b><br>₹6000/year support to farmers<br><a href="https://pmkisan.gov.in" target="_blank">pmkisan.gov.in</a>`,
-      hi: `<b>पीएम किसान</b><br>किसानों को ₹6000/वर्ष<br><a href="https://pmkisan.gov.in" target="_blank">pmkisan.gov.in</a>`,
-      mr: `<b>पीएम किसान</b><br>शेतकऱ्यांना ₹6000/वर्ष<br><a href="https://pmkisan.gov.in" target="_blank">pmkisan.gov.in</a>`
-    },
-
-    ayushman: {
-      en: `<b>Ayushman Bharat</b><br>₹5 lakh health cover<br><a href="https://pmjay.gov.in" target="_blank">pmjay.gov.in</a>`,
-      hi: `<b>आयुष्मान भारत</b><br>₹5 लाख स्वास्थ्य बीमा<br><a href="https://pmjay.gov.in" target="_blank">pmjay.gov.in</a>`,
-      mr: `<b>आयुष्मान भारत</b><br>₹5 लाख आरोग्य विमा<br><a href="https://pmjay.gov.in" target="_blank">pmjay.gov.in</a>`
-    },
-
-    scholar: {
-      en: `<b>National Scholarship Portal</b><br>Multiple scholarships<br><a href="https://scholarships.gov.in" target="_blank">scholarships.gov.in</a>`,
-      hi: `<b>राष्ट्रीय छात्रवृत्ति पोर्टल</b><br><a href="https://scholarships.gov.in" target="_blank">scholarships.gov.in</a>`,
-      mr: `<b>राष्ट्रीय शिष्यवृत्ती पोर्टल</b><br><a href="https://scholarships.gov.in" target="_blank">scholarships.gov.in</a>`
-    },
-
-    mudra: {
-      en: `<b>PM Mudra Yojana</b><br>Loan for small businesses<br><a href="https://www.mudra.org.in" target="_blank">mudra.org.in</a>`,
-      hi: `<b>पीएम मुद्रा योजना</b><br>व्यवसाय ऋण<br><a href="https://www.mudra.org.in" target="_blank">mudra.org.in</a>`,
-      mr: `<b>पीएम मुद्रा योजना</b><br>व्यवसाय कर्ज<br><a href="https://www.mudra.org.in" target="_blank">mudra.org.in</a>`
-    }
+  const lists = {
+    women: ["ladli","ujjwala","bbbp","matru","sukanya"],
+    agri: ["pmkisan","pmfby","soil","kcc","pmksy"],
+    edu: ["scholar","pmkv","midday","diksha","swayam"],
+    health: ["ayushman","jsy","poshan","tb","janaushadhi"],
+    emp: ["mudra","mgnrega","skill","startup","ncs"]
   };
 
+  let h = "<div class='btn-group'>";
+  lists[cat].forEach(id=>{
+    h += `<button onclick="scheme('${id}')">${DATA[id].name}</button>`;
+  });
+  h += "</div>";
+  addBot(h);
+}
+
+/* ---------- Scheme Details ---------- */
+function scheme(id){
+  chat.innerHTML = "";
+  const s = DATA[id][LANG];
   addBot(`
-${data[id][LANG]}<br><br>
-<button class="action-btn" onclick="showCategories()">⬅ Back</button>
-<button class="action-btn" onclick="showCategories()">🏠 Menu</button>
+<b>${DATA[id].name}</b><br><br>
+<b>Eligibility:</b><br>${s.eligibility}<br><br>
+<b>Documents:</b><br>${s.documents}<br><br>
+<b>Benefits:</b><br>${s.benefits}<br><br>
+<a href="${DATA[id].link}" target="_blank">${DATA[id].link}</a><br><br>
+<button onclick="showCategories()">Menu</button>
 `);
 }
+
+/* ---------- DATA (5 schemes per category) ---------- */
+const DATA = {
+
+ladli:{
+ name:"Ladli Bahin Yojana",
+ link:"https://ladlibahna.mahait.org",
+ en:{eligibility:"Women aged 21–60",documents:"Aadhaar, Ration Card",benefits:"₹1500 per month"},
+ hi:{eligibility:"21–60 वर्ष की महिलाएं",documents:"आधार, राशन कार्ड",benefits:"₹1500 प्रति माह"},
+ mr:{eligibility:"21–60 वयोगटातील महिला",documents:"आधार, रेशन कार्ड",benefits:"₹1500 दरमहा"}
+},
+
+ujjwala:{
+ name:"Ujjwala Yojana",
+ link:"https://pmuy.gov.in",
+ en:{eligibility:"BPL women",documents:"Aadhaar, Ration Card",benefits:"Free LPG connection"},
+ hi:{eligibility:"बीपीएल महिलाएं",documents:"आधार, राशन कार्ड",benefits:"मुफ्त गैस कनेक्शन"},
+ mr:{eligibility:"बीपीएल महिला",documents:"आधार, रेशन कार्ड",benefits:"मोफत गॅस कनेक्शन"}
+},
+
+bbbp:{
+ name:"Beti Bachao Beti Padhao",
+ link:"https://wcd.gov.in",
+ en:{eligibility:"Girl child families",documents:"Birth certificate",benefits:"Education awareness"},
+ hi:{eligibility:"बालिका परिवार",documents:"जन्म प्रमाणपत्र",benefits:"शिक्षा प्रोत्साहन"},
+ mr:{eligibility:"मुलींचे कुटुंब",documents:"जन्म प्रमाणपत्र",benefits:"शिक्षण प्रोत्साहन"}
+},
+
+matru:{
+ name:"Matru Vandana",
+ link:"https://wcd.nic.in",
+ en:{eligibility:"Pregnant women",documents:"Aadhaar, Bank details",benefits:"₹5000 assistance"},
+ hi:{eligibility:"गर्भवती महिलाएं",documents:"आधार, बैंक विवरण",benefits:"₹5000 सहायता"},
+ mr:{eligibility:"गर्भवती महिला",documents:"आधार, बँक तपशील",benefits:"₹5000 मदत"}
+},
+
+sukanya:{
+ name:"Sukanya Samriddhi",
+ link:"https://www.india.gov.in",
+ en:{eligibility:"Girl child below 10",documents:"Birth certificate",benefits:"High interest savings"},
+ hi:{eligibility:"10 वर्ष से कम बालिका",documents:"जन्म प्रमाणपत्र",benefits:"उच्च ब्याज बचत"},
+ mr:{eligibility:"10 वर्षाखालील मुलगी",documents:"जन्म प्रमाणपत्र",benefits:"उच्च व्याज बचत"}
+},
+
+/* ---- AGRICULTURE ---- */
+pmkisan:{name:"PM-KISAN",link:"https://pmkisan.gov.in",
+ en:{eligibility:"Small farmers",documents:"Land record",benefits:"₹6000 per year"},
+ hi:{eligibility:"छोटे किसान",documents:"भूमि रिकॉर्ड",benefits:"₹6000 प्रति वर्ष"},
+ mr:{eligibility:"लहान शेतकरी",documents:"7/12 उतारा",benefits:"₹6000 दरवर्षी"}},
+
+pmfby:{name:"PM Fasal Bima",link:"https://pmfby.gov.in",
+ en:{eligibility:"All farmers",documents:"Crop details",benefits:"Crop insurance"},
+ hi:{eligibility:"सभी किसान",documents:"फसल विवरण",benefits:"फसल बीमा"},
+ mr:{eligibility:"सर्व शेतकरी",documents:"पीक तपशील",benefits:"पीक विमा"}},
+
+soil:{name:"Soil Health Card",link:"https://soilhealth.dac.gov.in",
+ en:{eligibility:"Farmers",documents:"Land record",benefits:"Soil testing"},
+ hi:{eligibility:"किसान",documents:"भूमि रिकॉर्ड",benefits:"मिट्टी जांच"},
+ mr:{eligibility:"शेतकरी",documents:"जमीन उतारा",benefits:"माती तपासणी"}},
+
+kcc:{name:"Kisan Credit Card",link:"https://pmkisan.gov.in",
+ en:{eligibility:"Farmers",documents:"Aadhaar, Land proof",benefits:"Easy loans"},
+ hi:{eligibility:"किसान",documents:"आधार, भूमि प्रमाण",benefits:"आसान ऋण"},
+ mr:{eligibility:"शेतकरी",documents:"आधार, जमीन पुरावा",benefits:"सोपे कर्ज"}},
+
+pmksy:{name:"PM Krishi Sinchai",link:"https://pmksy.gov.in",
+ en:{eligibility:"Farmers",documents:"Land proof",benefits:"Irrigation support"},
+ hi:{eligibility:"किसान",documents:"भूमि प्रमाण",benefits:"सिंचाई सहायता"},
+ mr:{eligibility:"शेतकरी",documents:"जमीन पुरावा",benefits:"सिंचन मदत"}},
+
+/* ---- EDUCATION ---- */
+scholar:{name:"National Scholarship",link:"https://scholarships.gov.in",
+ en:{eligibility:"Students",documents:"Bonafide certificate",benefits:"Scholarship"},
+ hi:{eligibility:"छात्र",documents:"बोनाफाइड प्रमाणपत्र",benefits:"छात्रवृत्ति"},
+ mr:{eligibility:"विद्यार्थी",documents:"बोनाफाईड प्रमाणपत्र",benefits:"शिष्यवृत्ती"}},
+
+pmkv:{name:"PMKVY",link:"https://pmkvyofficial.org",
+ en:{eligibility:"Youth",documents:"Aadhaar",benefits:"Skill training"},
+ hi:{eligibility:"युवा",documents:"आधार",benefits:"कौशल प्रशिक्षण"},
+ mr:{eligibility:"युवा",documents:"आधार",benefits:"कौशल्य प्रशिक्षण"}},
+
+midday:{name:"Mid-Day Meal",link:"https://education.gov.in",
+ en:{eligibility:"School students",documents:"School ID",benefits:"Free meals"},
+ hi:{eligibility:"स्कूली छात्र",documents:"स्कूल आईडी",benefits:"मुफ्त भोजन"},
+ mr:{eligibility:"शालेय विद्यार्थी",documents:"शाळा ओळखपत्र",benefits:"मोफत जेवण"}},
+
+diksha:{name:"DIKSHA",link:"https://diksha.gov.in",
+ en:{eligibility:"Teachers & students",documents:"Login ID",benefits:"Digital learning"},
+ hi:{eligibility:"शिक्षक व छात्र",documents:"लॉगिन आईडी",benefits:"डिजिटल शिक्षा"},
+ mr:{eligibility:"शिक्षक व विद्यार्थी",documents:"लॉगिन आयडी",benefits:"डिजिटल शिक्षण"}},
+
+swayam:{name:"SWAYAM",link:"https://swayam.gov.in",
+ en:{eligibility:"Anyone",documents:"Email ID",benefits:"Free courses"},
+ hi:{eligibility:"कोई भी",documents:"ईमेल आईडी",benefits:"मुफ्त कोर्स"},
+ mr:{eligibility:"कोणीही",documents:"ईमेल आयडी",benefits:"मोफत अभ्यासक्रम"}},
+
+/* ---- HEALTH ---- */
+ayushman:{name:"Ayushman Bharat",link:"https://pmjay.gov.in",
+ en:{eligibility:"Poor families",documents:"Aadhaar",benefits:"₹5 lakh health cover"},
+ hi:{eligibility:"गरीब परिवार",documents:"आधार",benefits:"₹5 लाख स्वास्थ्य बीमा"},
+ mr:{eligibility:"गरिब कुटुंब",documents:"आधार",benefits:"₹5 लाख आरोग्य विमा"}},
+
+jsy:{name:"Janani Suraksha",link:"https://nhm.gov.in",
+ en:{eligibility:"Pregnant women",documents:"Aadhaar",benefits:"Safe delivery"},
+ hi:{eligibility:"गर्भवती महिलाएं",documents:"आधार",benefits:"सुरक्षित प्रसव"},
+ mr:{eligibility:"गर्भवती महिला",documents:"आधार",benefits:"सुरक्षित प्रसूती"}},
+
+poshan:{name:"Poshan Abhiyaan",link:"https://poshanabhiyaan.gov.in",
+ en:{eligibility:"Women & children",documents:"Aadhaar",benefits:"Nutrition support"},
+ hi:{eligibility:"महिला व बच्चे",documents:"आधार",benefits:"पोषण सहायता"},
+ mr:{eligibility:"महिला व मुले",documents:"आधार",benefits:"पोषण मदत"}},
+
+tb:{name:"TB Elimination",link:"https://tbcindia.gov.in",
+ en:{eligibility:"TB patients",documents:"Medical report",benefits:"Free treatment"},
+ hi:{eligibility:"टीबी रोगी",documents:"मेडिकल रिपोर्ट",benefits:"मुफ्त इलाज"},
+ mr:{eligibility:"टीबी रुग्ण",documents:"वैद्यकीय अहवाल",benefits:"मोफत उपचार"}},
+
+janaushadhi:{name:"Jan Aushadhi",link:"https://janaushadhi.gov.in",
+ en:{eligibility:"All citizens",documents:"Prescription",benefits:"Low-cost medicines"},
+ hi:{eligibility:"सभी नागरिक",documents:"प्रिस्क्रिप्शन",benefits:"सस्ती दवाएं"},
+ mr:{eligibility:"सर्व नागरिक",documents:"प्रिस्क्रिप्शन",benefits:"स्वस्त औषधे"}},
+
+/* ---- EMPLOYMENT ---- */
+mudra:{name:"PM Mudra",link:"https://mudra.org.in",
+ en:{eligibility:"Small businesses",documents:"Business proof",benefits:"Loan up to ₹10L"},
+ hi:{eligibility:"छोटे व्यवसाय",documents:"व्यवसाय प्रमाण",benefits:"₹10 लाख तक ऋण"},
+ mr:{eligibility:"लघु व्यवसाय",documents:"व्यवसाय पुरावा",benefits:"₹10 लाख कर्ज"}},
+
+mgnrega:{name:"MGNREGA",link:"https://nrega.nic.in",
+ en:{eligibility:"Rural households",documents:"Job card",benefits:"100 days employment"},
+ hi:{eligibility:"ग्रामीण परिवार",documents:"जॉब कार्ड",benefits:"100 दिन रोजगार"},
+ mr:{eligibility:"ग्रामीण कुटुंब",documents:"जॉब कार्ड",benefits:"100 दिवस रोजगार"}},
+
+skill:{name:"Skill India",link:"https://skillindia.gov.in",
+ en:{eligibility:"Youth",documents:"Aadhaar",benefits:"Skill training"},
+ hi:{eligibility:"युवा",documents:"आधार",benefits:"कौशल विकास"},
+ mr:{eligibility:"युवा",documents:"आधार",benefits:"कौशल्य विकास"}},
+
+startup:{name:"Startup India",link:"https://startupindia.gov.in",
+ en:{eligibility:"Entrepreneurs",documents:"Business registration",benefits:"Startup support"},
+ hi:{eligibility:"उद्यमी",documents:"व्यवसाय पंजीकरण",benefits:"स्टार्टअप सहायता"},
+ mr:{eligibility:"उद्योजक",documents:"व्यवसाय नोंदणी",benefits:"स्टार्टअप मदत"}},
+
+ncs:{name:"National Career Service",link:"https://ncs.gov.in",
+ en:{eligibility:"Job seekers",documents:"Resume",benefits:"Job opportunities"},
+ hi:{eligibility:"नौकरी चाहने वाले",documents:"रेज्यूमे",benefits:"रोजगार अवसर"},
+ mr:{eligibility:"नोकरी शोधणारे",documents:"रेझ्युमे",benefits:"रोजगार संधी"}}
+
+};
